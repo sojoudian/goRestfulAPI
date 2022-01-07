@@ -31,7 +31,7 @@ func (app *App) Run() error {
 
 	commentService := comment.NewCommentService(db)
 
-	handler := transportHttp.NewHandler()
+	handler := transportHttp.NewHandler(commentService)
 	handler.SetupRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
