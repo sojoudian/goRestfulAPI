@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/sojoudian/goRestfulAPI/internal/comment"
 	"github.com/sojoudian/goRestfulAPI/internal/database"
 	transportHttp "github.com/sojoudian/goRestfulAPI/internal/transport/http"
 )
@@ -24,7 +25,7 @@ func (app *App) Run() error {
 
 	//now we have our database implemented we can change _ to db
 	//_, err = database.NewDatabase()
-	db, err = database.NewDatabase()
+	db, err := database.NewDatabase()
 	if err != nil {
 		return err
 	}
@@ -33,7 +34,7 @@ func (app *App) Run() error {
 	if err != nil {
 		return err
 	}
-	commentService := comment.NewCommentService(db)
+	commentService := comment.NewService(db)
 
 	handler := transportHttp.NewHandler(commentService)
 	handler.SetupRoutes()

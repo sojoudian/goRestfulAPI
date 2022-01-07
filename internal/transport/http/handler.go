@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/sojoudian/goRestfulAPI/internal/comment"
@@ -25,9 +26,9 @@ func NewHandler(service *comment.Service) *Handler {
 // Method
 //SetupRoutes - sets up all the routes for our application
 func (h *Handler) SetupRoutes() {
-	fmt.Println("Setting up Routes")	
+	fmt.Println("Setting up Routes")
 	h.Router = mux.NewRouter()
-	
+
 	h.Router.HandleFunc("/api/comment", h.GetAllComment).Methods("GET")
 	h.Router.HandleFunc("/api/comment", h.PostComment).Methods("POST")
 	h.Router.HandleFunc("/api/comment/{id}", h.GetComment).Methods("GET")
@@ -41,7 +42,7 @@ func (h *Handler) SetupRoutes() {
 
 //GetComment - retrive comment by ID
 func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
-	var := mux.Vars(r)
+	vars := mux.Vars(r)
 	id := vars["id"]
 
 	i, er := strconv.ParseInt(id, 10, 64)
@@ -49,7 +50,7 @@ func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Unable to  parse UINT from ID")
 	}
 
-	comment, err := h.Service.GetComment(uint(id))
+	comment, err := h.Service.GetComment(uint(i))
 	if err != nil {
 		fmt.Fprintf(w, "Error Retrieving comment by ID")
 	}
@@ -70,7 +71,7 @@ func (h *Handler) GetAllComment(w http.ResponseWriter, r *http.Request) {
 // PostComment - adds a new comment
 func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 	comments, err := h.Service.PostComment(comment.Comment{
-		Slug: "/"
+		Slug: "/",
 	})
 	if err != nil {
 		fmt.Fprintf(w, "Failed to post new comment")
@@ -79,9 +80,9 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 }
 
 // UpdateComment - updates the comment by id
-func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request){
+func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request) {
 	comment, err := h.Service.UpdateComment(1, comment.Comment{
-		Slug: "/new"
+		Slug: "/new",
 	})
 	if err != nil {
 		fmt.Fprintf(w, "Failed to update comment")
@@ -90,7 +91,7 @@ func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request){
 }
 
 //DeleteComment -delete comment by id
-func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request){
+func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 	commentID, err := strconv.ParseInt(id, 10, 64)
