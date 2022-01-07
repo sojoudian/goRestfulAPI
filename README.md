@@ -40,3 +40,5 @@ hit `localhost:8080/api/comment/$ID` endpoint with `DELETE` method, which `$ID` 
 You have to get the:
 `{ "Message": "Comment successfully deleted" }`
 response.
+
+to validate the delete request hit endpoint : `localhost:8080/api/comment` again with `GET` method, and you shouldn't be able to see comment with ID=7
