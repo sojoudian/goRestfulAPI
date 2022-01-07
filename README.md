@@ -8,3 +8,9 @@ run pgSQL database with docker:
 
 test APIs with cur;/Postman :
 `localhost:8080/api/comment/1`
+
+test, add new comment for a new post using post method and postman:
+endpoint : `localhost:8080/api/comment`
+type: `application/json`
+content:
+`{"slug": "/post2", "author": "Maziar"}`

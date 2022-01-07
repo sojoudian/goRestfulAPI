@@ -75,23 +75,38 @@ func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
 
 //GetAllComments - retrives all comments from the comment service
 func (h *Handler) GetAllComment(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 	comments, err := h.Service.GetAllComments()
 	if err != nil {
 		fmt.Fprintf(w, "Fialed to retrive all comments")
 	}
-	fmt.Fprintf(w, "%+v", comments)
+
+	if err := json.NewEncoder(w).Encode(comments); err != nil {
+		panic(err)
+	}
+	//fmt.Fprintf(w, "%+v", comments)
 
 }
 
 // PostComment - adds a new comment
 func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
-	comments, err := h.Service.PostComment(comment.Comment{
-		Slug: "/",
-	})
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
+	var comment comment.Comment
+	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
+		fmt.Fprintf(w, "Failed to decode Json Body")
+	}
+
+	comments, err := h.Service.PostComment(comment)
 	if err != nil {
 		fmt.Fprintf(w, "Failed to post new comment")
 	}
-	fmt.Fprintf(w, "%+v", comments)
+	if err := json.NewEncoder(w).Encode(comments); err != nil {
+		panic(err)
+	}
+	//fmt.Fprintf(w, "%+v", comments)
 }
 
 // UpdateComment - updates the comment by id
