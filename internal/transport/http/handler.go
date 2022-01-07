@@ -5,17 +5,21 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/sojoudian/goRestfulAPI/internal/comment"
 )
 
 //Handler - stores pointers to our comment service
 type Handler struct {
-	Router *mux.Router
+	Router  *mux.Router
+	Service *comment.Service
 }
 
 //function is in capital letter because we want to call it from our main function
 // Newhandler - returns a pointer to a Handler
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(service *comment.Service) *Handler {
+	return &Handler{
+		Service: service,
+	}
 }
 
 // Method
