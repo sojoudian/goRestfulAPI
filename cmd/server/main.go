@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/sojoudian/goRestfulAPI/internal/database"
 	transportHttp "github.com/sojoudian/goRestfulAPI/internal/transport/http"
 )
 

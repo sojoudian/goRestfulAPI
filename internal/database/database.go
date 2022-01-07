@@ -5,12 +5,17 @@ import (
 	"os"
 
 	"github.com/jinzhu/gorm"
-	- "github.com/jinzhu/gorm/dialects/postgres"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 //NewDatabase - returns a pointer to a database object
-func NewDatabase() (*grom.DB, err) {
+func NewDatabase() (*gorm.DB, error) {
 	fmt.Println("Set up new database connection")
+
+	// err := godotenv.Load(".env")
+	// if err != nil {
+	// 	log.Panic("Error loading environment", err)
+	// }
 
 	dbUsername := os.Getenv("DB_USERNAME")
 	dbPassword := os.Getenv("DB_PASSWORD")
@@ -19,7 +24,7 @@ func NewDatabase() (*grom.DB, err) {
 	dbPort := os.Getenv("DB_PORT")
 
 	connectionString := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable", dbHost, dbPort, dbUsername, dbTable, dbPassword)
-
+	fmt.Println("debuging maziar", connectionString)
 	db, err := gorm.Open("postgres", connectionString)
 	if err != nil {
 		return db, err
