@@ -14,3 +14,5 @@ endpoint : `localhost:8080/api/comment`
 type: `application/json`
 content:
 `{"slug": "/post2", "author": "Maziar"}`
+
+to validate the post request use the endpoint : `localhost:8080/api/comment` again but this time with `GET` method
