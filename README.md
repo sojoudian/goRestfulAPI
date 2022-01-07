@@ -16,3 +16,16 @@ content:
 `{"slug": "/post2", "author": "Maziar"}`
 
 to validate the post request use the endpoint : `localhost:8080/api/comment` again but this time with `GET` method
+
+Update comment, use the endpoint : `localhost:8080/api/comment/$ID` change the &ID with comment ID you want to update, for example `localhost:8080/api/comment/3` and change the request body with same method:
+type: `application/json`
+content:
+`{"slug": "/post2", "author": "Maziar"}`
+
+to :
+type: `application/json`
+content:
+`{"slug": "/post2", "author": "Maziar Sojoudian"}`
+
+beside other fields, `UpdatedAt` will also update
+`"UpdatedAt": "2022-01-07T14:19:11.341906-05:00",`

@@ -111,13 +111,25 @@ func (h *Handler) PostComment(w http.ResponseWriter, r *http.Request) {
 
 // UpdateComment - updates the comment by id
 func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request) {
-	comment, err := h.Service.UpdateComment(1, comment.Comment{
-		Slug: "/new",
-	})
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
+	var comment comment.Comment
+	if err := json.NewDecoder(r.Body).Decode(&comment); err != nil {
+		fmt.Fprintf(w, "Failed to decode Json Body")
+	}
+	vars := mux.Vars(r)
+	id := vars["id"]
+	commentID, err := strconv.ParseInt(id, 10, 64)
+
+	comment, err = h.Service.UpdateComment(uint(commentID), comment)
 	if err != nil {
 		fmt.Fprintf(w, "Failed to update comment")
 	}
-	fmt.Fprintf(w, "%+v", comment)
+	if err := json.NewEncoder(w).Encode(comment); err != nil {
+		panic(err)
+	}
+	//fmt.Fprintf(w, "%+v", comment)
 }
 
 //DeleteComment -delete comment by id
