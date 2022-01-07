@@ -134,6 +134,9 @@ func (h *Handler) UpdateComment(w http.ResponseWriter, r *http.Request) {
 
 //DeleteComment -delete comment by id
 func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 	commentID, err := strconv.ParseInt(id, 10, 64)
@@ -146,5 +149,9 @@ func (h *Handler) DeleteComment(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Failed to delete comment by comment ID")
 	}
 
-	fmt.Fprintf(w, "Successfully deleted comment")
+	if err := json.NewEncoder(w).Encode(Response{Message: "Comment successfully deleted"}); err != nil {
+		panic(err)
+	}
+
+	//fmt.Fprintf(w, "Successfully deleted comment")
 }
