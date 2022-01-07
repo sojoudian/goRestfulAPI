@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -13,6 +14,11 @@ import (
 type Handler struct {
 	Router  *mux.Router
 	Service *comment.Service
+}
+
+// Response - an object to strore response from our API
+type Response struct {
+	Message string
 }
 
 //function is in capital letter because we want to call it from our main function
@@ -36,12 +42,19 @@ func (h *Handler) SetupRoutes() {
 	h.Router.HandleFunc("/api/comment/{id}", h.DeleteComment).Methods("DELETE")
 
 	h.Router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "I am alive!")
+		//fmt.Fprintf(w, "I am alive!")
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusOK)
+		if err := json.NewEncoder(w).Encode(Response{Message: "I am alive!"}); err != nil {
+			panic(err)
+		}
 	})
 }
 
 //GetComment - retrive comment by ID
 func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -54,8 +67,10 @@ func (h *Handler) GetComment(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Fprintf(w, "Error Retrieving comment by ID")
 	}
-
-	fmt.Fprintf(w, "%+v", comment)
+	if err := json.NewEncoder(w).Encode(comment); err != nil {
+		panic(err)
+	}
+	//fmt.Fprintf(w, "%+v", comment)
 }
 
 //GetAllComments - retrives all comments from the comment service
