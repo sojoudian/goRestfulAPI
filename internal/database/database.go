@@ -24,6 +24,8 @@ func NewDatabase() (*grom.DB, err) {
 	if err != nil {
 		return db, err
 	}
+
+	// Test connection to the database
 	if err := db.DB().Ping(); err != nil {
 		return db, err
 	}

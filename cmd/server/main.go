@@ -17,6 +17,14 @@ type App struct {
 func (app *App) Run() error {
 	fmt.Println("Setting up our APP")
 
+	var err error
+	//the following line should be like this db, err = database.NewDatabase()
+	//but because we dont need db var in this line yet we will define db later
+	_, err = database.NewDatabase()
+	if err != nil {
+		return err
+	}
+
 	handler := transportHttp.NewHandler()
 	handler.SetupRoutes()
 
