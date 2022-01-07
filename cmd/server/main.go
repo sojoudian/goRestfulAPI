@@ -21,10 +21,15 @@ func (app *App) Run() error {
 	var err error
 	//the following line should be like this db, err = database.NewDatabase()
 	//but because we dont need db var in this line yet we will define db later
-	_, err = database.NewDatabase()
+
+	//now we have our database implemented we can change _ to db
+	//_, err = database.NewDatabase()
+	db, err = database.NewDatabase()
 	if err != nil {
 		return err
 	}
+
+	commentService := comment.NewCommentService(db)
 
 	handler := transportHttp.NewHandler()
 	handler.SetupRoutes()
