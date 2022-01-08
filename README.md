@@ -42,3 +42,7 @@ You have to get the:
 response.
 
 to validate the delete request hit endpoint : `localhost:8080/api/comment` again with `GET` method, and you shouldn't be able to see comment with ID=7
+
+## Todo
+
+create test for the rest of the APIs
