@@ -6,6 +6,7 @@ package test
 import (
 	"fmt"
 	"github.com/go-resty/resty/v2"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -16,5 +17,6 @@ func TestHealthEndpoint(t *testing.T) {
 	if err != nil {
 		t.Fail()
 	}
-	fmt.Println(resp.StatusCode())
+
+	assert.Equal(t, 200, resp.StatusCode())
 }
