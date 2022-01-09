@@ -7,10 +7,11 @@ import (
 	"github.com/sojoudian/goRestfulAPI/internal/comment"
 	"github.com/sojoudian/goRestfulAPI/internal/database"
 	transportHttp "github.com/sojoudian/goRestfulAPI/internal/transport/http"
+	log "github.com/sirupsen/logrus"
 )
 
 // App - contain application information
-type App struct {
+type App struct { 
 	Name    string
 	Version string
 }
@@ -18,7 +19,14 @@ type App struct {
 //
 //Run - sets up our application
 func (app *App) Run() error {
-	fmt.Println("Setting up our APP")
+	log.SetFormatter(&log.LogFormatter{})
+	// fmt.Println("Setting up our APP")
+	log.WithFields(
+		log.Fields{
+			"AppName":	  app.Name,
+			"AppVersion": app.Version,
+			
+		}).Info("Setting up application")
 
 	var err error
 	//the following line should be like this db, err = database.NewDatabase()
@@ -41,20 +49,20 @@ func (app *App) Run() error {
 	handler.SetupRoutes()
 
 	if err := http.ListenAndServe(":8080", handler.Router); err != nil {
-		fmt.Println("Failed to set up server")
+		log.Error("Failed to set up server")
 		return err
 	}
 
 	return nil
 }
 func main() {
-	fmt.Println("Go RestfulAPI")
+	// fmt.Println("Go RestfulAPI")
 	app := App{
 		Name: "Commenting Service",
 		Version: "0.0.1"
 	}
 	if err := app.Run(); err != nil {
-		fmt.Println("Error starting Go RestfulAPI")
-		fmt.Println(err)
+		log.Error("Error starting Go RestfulAPI")
+		log.Fatal(err)
 	}
 }
