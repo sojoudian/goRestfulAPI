@@ -57,7 +57,7 @@ func BasicAuth(original func(w http.ResponseWriter, r *http.Request)) func(w htt
 		if user == "admin" && pass == "admin" && ok {
 			original(w, r)
 		} else {
-			// w.Header().Set("Content-Type", "application/json; charset=utf8")
+			w.Header().Set("Content-Type", "application/json; charset=utf8")
 			sendErrorResponse(w, "not authorized", errors.New("not authorized"))
 			return
 		}
@@ -85,7 +85,7 @@ func JWTAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.
 		log.Info("JWT authentication hit")
 		authHeader := r.Header["Authorization"]
 		if authHeader == nil {
-			// w.Header().Set("Content-Type", "application/json; charset=utf-8")
+			w.Header().Set("Content-Type", "application/json; charset=utf-8")
 			sendErrorResponse(w, "not authorized", errors.New("not authorized"))
 			return
 		}
@@ -93,7 +93,7 @@ func JWTAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.
 		// Bearer JWT-token
 		authHeaderParts := strings.Split(authHeader[0], " ")
 		if len(authHeaderParts) != 2 || strings.ToLower(authHeaderParts[0]) != "bearer" {
-			// w.Header().Set("Content-Type", "application/; charset=utf-8")
+			w.Header().Set("Content-Type", "application/; charset=utf-8")
 			sendErrorResponse(w, "not authorized", errors.New("not authorized"))
 			return
 		}
@@ -101,7 +101,7 @@ func JWTAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.
 		if validateToken(authHeaderParts[1]) {
 			original(w, r)
 		} else {
-			// w.Header().Set("Content-Type", "application/json; charset=utf8")
+			w.Header().Set("Content-Type", "application/json; charset=utf8")
 			sendErrorResponse(w, "not authorized", errors.New("not authorized"))
 			return
 		}
@@ -124,7 +124,7 @@ func (h *Handler) SetupRoutes() {
 
 	h.Router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		//fmt.Fprintf(w, "I am alive!")
-		// w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		// w.WriteHeader(http.StatusOK)
 		if err := sendOKResponse(w, (Response{Message: "I am alive!"})); err != nil {
 			panic(err)
@@ -135,14 +135,14 @@ func (h *Handler) SetupRoutes() {
 
 //Define a way to set headers only once  for all endpoints
 func sendOKResponse(w http.ResponseWriter, resp interface{}) error {
-	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 	return json.NewEncoder(w).Encode(resp)
 }
 
 func sendErrorResponse(w http.ResponseWriter, message string, err error) {
-	w.WriteHeader(http.StatusInternalServerError)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusInternalServerError)
 	if err := json.NewEncoder(w).Encode(Response{Message: message, Error: err.Error()}); err != nil {
 		log.Error(err)
 	}
