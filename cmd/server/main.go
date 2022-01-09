@@ -1,17 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/sojoudian/goRestfulAPI/internal/comment"
 	"github.com/sojoudian/goRestfulAPI/internal/database"
 	transportHttp "github.com/sojoudian/goRestfulAPI/internal/transport/http"
-	log "github.com/sirupsen/logrus"
 )
 
 // App - contain application information
-type App struct { 
+type App struct {
 	Name    string
 	Version string
 }
@@ -19,13 +18,12 @@ type App struct {
 //
 //Run - sets up our application
 func (app *App) Run() error {
-	log.SetFormatter(&log.LogFormatter{})
+	log.SetFormatter(&log.JSONFormatter{})
 	// fmt.Println("Setting up our APP")
 	log.WithFields(
 		log.Fields{
-			"AppName":	  app.Name,
+			"AppName":    app.Name,
 			"AppVersion": app.Version,
-			
 		}).Info("Setting up application")
 
 	var err error
@@ -58,8 +56,8 @@ func (app *App) Run() error {
 func main() {
 	// fmt.Println("Go RestfulAPI")
 	app := App{
-		Name: "Commenting Service",
-		Version: "0.0.1"
+		Name:    "Commenting Service",
+		Version: "0.0.1",
 	}
 	if err := app.Run(); err != nil {
 		log.Error("Error starting Go RestfulAPI")
