@@ -2,6 +2,7 @@ package http
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -44,11 +45,18 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 // BasicAuth - a handly middleware function that will provide basic authentication around specific endpoint -
 func BasicAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.WithFields(log.Fields{
-			"Method": r.Method,
-			"Path":   r.URL.Path,
-		}).Info("Basic aut endpoint hit")
-		original(w, r)
+		// log.WithFields(log.Fields{
+		// 	"Method": r.Method,
+		// 	"Path":   r.URL.Path,
+		// }).Info("Basic aut endpoint hit")
+		log.Info("Basic aut endpoint hit")
+		user, pass, ok := r.BasicAuth()
+		if user == "admin" && pass == "admin" && ok {
+			original(w, r)
+		} else {
+			w.Header().Set("Content-Type", "application/json: charset=utf8")
+			sendErrorResponse(w, "not authorized", errors.New("not authorized"))
+		}
 	}
 }
 
