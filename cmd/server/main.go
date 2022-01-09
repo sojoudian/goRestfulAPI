@@ -9,9 +9,10 @@ import (
 	transportHttp "github.com/sojoudian/goRestfulAPI/internal/transport/http"
 )
 
-// App - the struct which contains things like pointers
-// to database connections
+// App - contain application information
 type App struct {
+	Name    string
+	Version string
 }
 
 //
@@ -48,7 +49,10 @@ func (app *App) Run() error {
 }
 func main() {
 	fmt.Println("Go RestfulAPI")
-	app := App{}
+	app := App{
+		Name: "Commenting Service",
+		Version: "0.0.1"
+	}
 	if err := app.Run(); err != nil {
 		fmt.Println("Error starting Go RestfulAPI")
 		fmt.Println(err)
