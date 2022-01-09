@@ -6,11 +6,13 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	log "github.com/sirupsen/logrus"
 )
 
 //NewDatabase - returns a pointer to a database object
 func NewDatabase() (*gorm.DB, error) {
-	fmt.Println("Set up new database connection")
+	// fmt.Println("Set up new database connection")
+	log.Info("Setting up new database connection")
 
 	// err := godotenv.Load(".env")
 	// if err != nil {
