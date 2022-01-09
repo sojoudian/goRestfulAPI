@@ -33,8 +33,8 @@ func NewHandler(service *comment.Service) *Handler {
 func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.WithFields(log.Fields{
-			Method: r.Method,
-			"Path": r.URL.Path,
+			"Method": r.Method,
+			"Path":   r.URL.Path,
 		}).Info("Handled request")
 		// log.Info("Endpoint hit")
 		next.ServeHTTP(w, r)
