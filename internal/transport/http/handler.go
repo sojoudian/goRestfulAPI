@@ -30,7 +30,7 @@ func NewHandler(service *comment.Service) *Handler {
 }
 
 //LoggingMiddleware - add middleware around endpoints
-func loggingMiddleware(next http.Handler) http.Handler {
+func LoggingMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Info("Endpoint hit")
 		next.ServeHTTP(w, r)
