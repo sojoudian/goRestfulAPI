@@ -41,6 +41,17 @@ func LoggingMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+// BasicAuth - a handly middleware function that will provide basic authentication around specific endpoint -
+func BasicAuth(original func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		log.WithFields(log.Fields{
+			"Method": r.Method,
+			"Path":   r.URL.Path,
+		}).Info("Basic aut endpoint hit")
+		original(w, r)
+	}
+}
+
 // Method
 //SetupRoutes - sets up all the routes for our application
 func (h *Handler) SetupRoutes() {
@@ -50,10 +61,10 @@ func (h *Handler) SetupRoutes() {
 	h.Router.Use(LoggingMiddleware)
 
 	h.Router.HandleFunc("/api/comment", h.GetAllComment).Methods("GET")
-	h.Router.HandleFunc("/api/comment", h.PostComment).Methods("POST")
+	h.Router.HandleFunc("/api/comment", BasicAuth(h.PostComment)).Methods("POST")
 	h.Router.HandleFunc("/api/comment/{id}", h.GetComment).Methods("GET")
-	h.Router.HandleFunc("/api/comment/{id}", h.UpdateComment).Methods("PUT")
-	h.Router.HandleFunc("/api/comment/{id}", h.DeleteComment).Methods("DELETE")
+	h.Router.HandleFunc("/api/comment/{id}", BasicAuth(h.UpdateComment)).Methods("PUT")
+	h.Router.HandleFunc("/api/comment/{id}", BasicAuth(h.DeleteComment)).Methods("DELETE")
 
 	h.Router.HandleFunc("/api/health", func(w http.ResponseWriter, r *http.Request) {
 		//fmt.Fprintf(w, "I am alive!")
